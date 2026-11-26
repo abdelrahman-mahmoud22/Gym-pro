@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة الجيم</title>
+<style>
+:root{--bg:#0f1115;--pn:#181b21;--ln:#292e38;--tx:#eef0f4;--mu:#8b93a3;--ac2:#ffa24a;--b:#4c8dff;--ac:#ff5a1f;--g:#2fbf71;--y:#f2b134;--r:#ef4b4b}
+*{box-sizing:border-box;margin:0}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh}
+nav{width:200px;background:var(--pn);border-inline-end:1px solid var(--ln);padding:18px 10px;position:sticky;top:0;height:100vh}
+nav h1{font-size:19px;padding:0 10px 18px;color:var(--ac)}
+nav button{display:block;width:100%;text-align:start;background:none;border:0;color:var(--mu);padding:11px 12px;border-radius:6px;font:inherit;cursor:pointer;margin-bottom:3px}
+nav button.on,nav button:hover{background:var(--bg);color:var(--tx)}nav button.on{border-inline-start:3px solid var(--ac)}
+main{flex:1;padding:24px;max-width:1100px}h2{font-size:22px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.st{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:14px}.st b{display:block;font-size:28px;margin-top:4px}
+.bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+input,select,textarea{background:var(--bg);border:1px solid var(--ln);color:var(--tx);padding:9px 10px;border-radius:6px;font:inherit;width:100%}
+.bar input,.bar select{width:auto;flex:1;min-width:140px}
+button.b{background:var(--ac);color:#fff;border:0;padding:9px 16px;border-radius:6px;font:inherit;cursor:pointer;font-weight:600}
+button.s{background:var(--ln);color:var(--tx);border:0;padding:5px 9px;border-radius:5px;font:inherit;font-size:13px;cursor:pointer;margin-inline-start:3px}
+button.d{color:var(--r)}
+table{width:100%;border-collapse:collapse;background:var(--pn);border-radius:8px;overflow:hidden;font-size:14px}
+th{background:#262a32;color:var(--mu);font-weight:600}th,td{padding:10px;text-align:start;border-bottom:1px solid var(--ln)}
+.tg{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600}.g{background:#2fbf7122;color:var(--g)}.y{background:#f2b13422;color:var(--y)}.r{background:#ef4b4b22;color:var(--r)}
+dialog{background:var(--pn);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:22px;width:min(420px,92vw)}dialog::backdrop{background:#000a}
+dialog label{display:block;margin:10px 0 4px;color:var(--mu);font-size:13px}.ft{display:flex;gap:8px;margin-top:18px}
+.em{color:var(--mu);padding:28px;text-align:center;background:var(--pn);border-radius:8px}
+#msg{padding:12px 14px;border-radius:8px;margin-bottom:14px;display:none}
+@media(max-width:700px){body{flex-direction:column}nav{width:100%;height:auto;position:static;display:flex;flex-wrap:wrap}nav h1{width:100%;padding-bottom:8px}nav button{width:auto}main{padding:14px}table{display:block;overflow-x:auto}}
+#app{display:flex;flex:1}#lg{display:none;flex:1;align-items:center;justify-content:center;background:radial-gradient(900px 500px at 70% 0,#ff5a1f33,transparent),var(--bg)}
+.lgb{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:32px;width:min(380px,92vw);display:flex;flex-direction:column;gap:12px}.lgb h1{font-size:22px;margin-bottom:6px}
+nav{width:220px;display:flex;flex-direction:column}nav h1{background:linear-gradient(90deg,#ff5a1f,#ffa24a);-webkit-background-clip:text;color:transparent}
+.me{margin-top:auto;padding:12px 6px 0;border-top:1px solid var(--ln);font-size:13px;color:var(--mu)}
+.st{border-top:3px solid var(--c,var(--ln))}.st small{color:var(--mu);font-size:12px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px;margin-bottom:20px}.pn{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:16px}.pn h3{font-size:14px;color:var(--mu);margin-bottom:10px;font-weight:600}.ch{width:100%}
+.pb{height:8px;background:var(--ln);border-radius:9px;overflow:hidden;margin-top:4px}.pb i{display:block;height:100%;background:linear-gradient(90deg,#ff5a1f,#ffa24a)}
+button.b{background:linear-gradient(90deg,#ff5a1f,#ff7a3d)}tr:hover td{background:#1e222a}
+</style></head><body>
+<div id="lg"></div><div id="app"><nav><h1 id="gn"></h1>
+<button data-p="dash">📊 الرئيسية</button><button data-p="mem">👥 الأعضاء</button><button data-p="att">✅ الحضور</button><button data-p="pay" data-o>💰 المدفوعات</button><button data-p="stf" data-o>🪪 الموظفين</button><button data-p="set" data-o>⚙ الإعدادات</button>
+<div class="me"><div id="mn"></div><button class="s" style="margin:8px 0 0" onclick="me=null;draw()">تسجيل خروج</button></div></nav>
+<main id="v"></main></div>
+<dialog id="dl"></dialog>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let db;try{db=JSON.parse(localStorage.gym)}catch(e){}
+db=db||{m:[],p:[],a:[],pl:[{n:'شهري',d:30,pr:300},{n:'3 شهور',d:90,pr:800},{n:'سنوي',d:365,pr:2500}],gym:'إدارة الجيم',seq:1};
+db.u=db.u||[];const save=()=>{try{localStorage.gym=JSON.stringify(db)}catch(e){alert('تعذر الحفظ')}};
+const today=()=>new Date().toLocaleDateString('sv'),add=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x.toLocaleDateString('sv')};
+const left=m=>Math.round((new Date(m.end)-new Date(today()))/864e5);
+const stt=m=>{let l=left(m);return l<0?['منتهي','r']:l<=5?['قارب ('+l+' يوم)','y']:['ساري','g']};
+const tag=m=>{let s=stt(m);return `<span class="tg ${s[1]}">${s[0]}</span>`};
+const mem=id=>db.m.find(m=>m.id==id),pl=n=>db.pl.find(p=>p.n==n);
+const wa=(m,t)=>`https://wa.me/20${String(m.phone).replace(/\D/g,'').replace(/^0/,'')}?text=${encodeURIComponent(t)}`;
+const remind=m=>`أهلاً ${m.name}، اشتراكك في ${db.gym} ينتهي بتاريخ ${m.end}. نتشرف بتجديدك 💪`;
+let page='dash',q='',fl='',mo=today().slice(0,7);
+document.querySelectorAll('nav button[data-p]').forEach(b=>b.onclick=()=>{page=b.dataset.p;draw()});
+function note(t,c){const e=$('#msg');if(!e)return;e.style.display='block';e.style.background=c=='r'?'#ef4b4b33':'#2fbf7133';e.textContent=t}
+function draw(){
+ if(!me)return gate();
+ if(me.role!='owner'&&['pay','set','stf'].includes(page))page='dash';
+ document.querySelectorAll('nav button[data-o]').forEach(b=>b.style.display=me.role=='owner'?'':'none');$('#mn').textContent=me.name+' ('+(me.role=='owner'?'مالك':'موظف')+')';
+ $('#gn').textContent='🏋 '+db.gym;document.title=db.gym;
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p==page));
+ $('#v').innerHTML=({dash,mem:members,att:attend,pay:payments,set:settings,stf:staff})[page]();
+}
+let me=null;
+const H=async x=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('gym::'+x)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+function gate(){const f=!db.u.length;$('#app').style.display='none';$('#lg').style.display='flex';
+ $('#lg').innerHTML=`<form class="lgb" onsubmit="return go(event)"><h1>🏋 ${f?'إنشاء حساب المالك':esc(db.gym)}</h1>${f?'<input id="l0" placeholder="اسم الجيم" required><input id="l1" placeholder="اسمك" required>':''}<input id="l2" type="email" placeholder="البريد الإلكتروني" required><input id="l3" type="password" placeholder="كلمة المرور" required minlength="6"><button class="b">${f?'إنشاء الحساب':'دخول'}</button><div id="le" style="color:var(--r)"></div></form>`}
+async function go(e){e.preventDefault();const em=$('#l2').value.trim().toLowerCase(),h=await H($('#l3').value);
+ if(!db.u.length){db.gym=$('#l0').value;db.u.push({id:1,name:$('#l1').value,email:em,h,role:'owner'});save();me=db.u[0]}
+ else{const u=db.u.find(u=>u.email==em&&u.h==h);if(!u){$('#le').textContent='البريد أو كلمة المرور غير صحيحة';return false}me=u}
+ $('#lg').style.display='none';$('#app').style.display='flex';page='dash';draw();return false}
+function staff(){return `<h2>الموظفين</h2><table><tr><th>الاسم</th><th>البريد</th><th>الصلاحية</th><th></th></tr>${db.u.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${u.role=='owner'?'مالك':'موظف'}</td><td>${u.id==me.id?'':`<button class="s" onclick="rp(${u.id})">كلمة مرور جديدة</button><button class="s d" onclick="du(${u.id})">حذف</button>`}</td></tr>`).join('')}</table><h2 style="font-size:17px;margin-top:20px">إضافة موظف</h2><div class="bar"><input id="s1" placeholder="الاسم"><input id="s2" type="email" placeholder="البريد الإلكتروني"><input id="s3" placeholder="كلمة مرور (6 أحرف+)"><select id="s4"><option value="staff">موظف (حضور وأعضاء)</option><option value="owner">مالك (كل الصلاحيات)</option></select><button class="b" onclick="addU()">إضافة</button></div>`}
+async function addU(){const n=$('#s1').value.trim(),e=$('#s2').value.trim().toLowerCase(),p=$('#s3').value;if(!n||!e||p.length<6)return alert('أكمل البيانات (كلمة المرور 6 أحرف على الأقل)');if(db.u.some(u=>u.email==e))return alert('البريد مستخدم بالفعل');db.u.push({id:Date.now(),name:n,email:e,h:await H(p),role:$('#s4').value});save();draw()}
+function du(id){if(confirm('حذف الموظف؟')){db.u=db.u.filter(u=>u.id!=id);save();draw()}}
+async function rp(id){const p=prompt('كلمة المرور الجديدة (6 أحرف+)');if(!p||p.length<6)return;db.u.find(u=>u.id==id).h=await H(p);save();alert('تم تغيير كلمة المرور')}
+const mons=()=>[5,4,3,2,1,0].map(i=>{let d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);return d.toLocaleDateString('sv').slice(0,7)});
+const bars=(d,c)=>{const n=d.length,w=300/n,mx=Math.max(1,...d.map(x=>x[1]));return `<svg viewBox="0 0 300 130" class="ch">${d.map((x,i)=>{const h=x[1]/mx*80,cx=i*w+w/2;return `<rect x="${cx-w*.32}" y="${100-h}" width="${w*.64}" height="${h}" rx="4" fill="${c}"/><text x="${cx}" y="${94-h}" text-anchor="middle" fill="#eef0f4" font-size="10">${x[1]||''}</text><text x="${cx}" y="118" text-anchor="middle" fill="#8b93a3" font-size="9">${x[0]}</text>`}).join('')}</svg>`};
+function dash(){
+ const o=me.role=='owner',t=today(),M=mons(),a=db.m.filter(m=>left(m)>=0),ex=a.filter(m=>left(m)<=5),od=db.m.filter(m=>left(m)<0);
+ const rv=k=>db.p.filter(p=>p.d.slice(0,7)==k).reduce((s,p)=>s+p.amt,0),cur=rv(M[5]),prv=rv(M[4]),gr=prv?Math.round((cur-prv)/prv*100):null;
+ const td=db.a.filter(x=>x.t.slice(0,10)==t).length,nw=db.m.filter(m=>m.start.slice(0,7)==M[5]).length,ret=db.m.length?Math.round(a.length/db.m.length*100):0;
+ const days=[0,1,2,3,4,5,6].map(i=>add(t,i-6)),hrs=[...Array(14)].map((_,i)=>i+8);
+ const K=(l,v,c,s='')=>`<div class="st" style="--c:${c}">${l}<b>${v}</b><small>${s}&nbsp;</small></div>`;
+ const soon=[...ex,...od].sort((x,y)=>left(x)-left(y)).slice(0,8);
+ return `<h2>أهلاً ${esc(me.name)} 👋</h2><div class="grid">${o?K('إيراد الشهر',cur,'#ff5a1f',gr==null?'':(gr>=0?'▲ ':'▼ ')+Math.abs(gr)+'% عن الشهر الماضي'):''}${K('أعضاء نشطين',a.length,'#2fbf71','نسبة الاستمرار '+ret+'%')}${K('أعضاء جدد الشهر',nw,'#4c8dff')}${K('حضور اليوم',td,'#ffa24a')}${K('قربت تنتهي',ex.length,'#f2b134')}${K('منتهية',od.length,'#ef4b4b')}</div>
+ <div class="row">${o?`<div class="pn"><h3>الإيراد آخر 6 شهور</h3>${bars(M.map(k=>[k.slice(5),rv(k)]),'#ff5a1f')}</div>`:''}<div class="pn"><h3>الحضور آخر 7 أيام</h3>${bars(days.map(d=>[d.slice(8),db.a.filter(x=>x.t.slice(0,10)==d).length]),'#4c8dff')}</div><div class="pn"><h3>أوقات الذروة (الساعة)</h3>${bars(hrs.map(h=>[h,db.a.filter(x=>+x.t.slice(11,13)==h).length]),'#ffa24a')}</div><div class="pn"><h3>الأعضاء النشطين حسب الباقة</h3>${db.pl.map(p=>{const c=a.filter(m=>m.plan==p.n).length;return `<div style="margin-bottom:12px">${esc(p.n)}<span style="float:left;color:var(--mu)">${c}</span><div class="pb"><i style="width:${a.length?c/a.length*100:0}%"></i></div></div>`}).join('')}</div></div>
+ <h2 style="font-size:17px">يحتاجون تجديد</h2>${soon.length?`<table><tr><th>الاسم</th><th>الانتهاء</th><th>الحالة</th><th></th></tr>${soon.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.end}</td><td>${tag(m)}</td><td><button class="s" onclick="renew(${m.id})">تجديد</button><a class="s" style="text-decoration:none;display:inline-block" target="_blank" href="${wa(m,remind(m))}">واتساب</a></td></tr>`).join('')}</table>`:'<div class="em">كل الاشتراكات سارية ✔</div>'}`}
+
+function members(){
+ let l=db.m.filter(m=>(m.name+m.phone+m.id).includes(q)&&(!fl||(fl=='act'?left(m)>=0:left(m)<0)));
+ return `<h2>الأعضاء (${db.m.length})</h2><div class="bar"><input placeholder="بحث بالاسم أو الموبايل أو الكود" value="${esc(q)}" oninput="q=this.value;draw2()"><select onchange="fl=this.value;draw()"><option value="">الكل</option><option value="act" ${fl=='act'?'selected':''}>ساري</option><option value="exp" ${fl=='exp'?'selected':''}>منتهي</option></select><button class="b" onclick="addM()">+ عضو جديد</button></div><div id="ml">${mtab(l)}</div>`;
+}
+const mtab=l=>l.length?`<table><tr><th>كود</th><th>الاسم</th><th>الموبايل</th><th>الباقة</th><th>الانتهاء</th><th>الحالة</th><th></th></tr>${l.map(m=>`<tr><td>${m.id}</td><td>${esc(m.name)}</td><td>${esc(m.phone)}</td><td>${esc(m.plan)}</td><td>${m.end}</td><td>${tag(m)}</td><td><button class="s" onclick="renew(${m.id})">تجديد</button><button class="s" onclick="editM(${m.id})">تعديل</button><button class="s d" onclick="delM(${m.id})">حذف</button></td></tr>`).join('')}</table>`:'<div class="em">مفيش أعضاء بالشكل ده. اضغط "عضو جديد" للبدء.</div>';
+function draw2(){$('#ml').innerHTML=mtab(db.m.filter(m=>(m.name+m.phone+m.id).includes(q)))}
+const opts=s=>db.pl.map(p=>`<option ${p.n==s?'selected':''}>${esc(p.n)}</option>`).join('');
+function dlg(h){$('#dl').innerHTML=h;$('#dl').showModal()}
+function addM(){dlg(`<h2>عضو جديد</h2><label>الاسم</label><input id="f1"><label>الموبايل</label><input id="f2" type="tel"><label>الباقة</label><select id="f3" onchange="$('#f4').value=pl(this.value).pr">${opts()}</select><label>المبلغ المدفوع</label><input id="f4" type="number" value="${db.pl[0]?.pr||0}"><label>ملاحظات</label><input id="f5"><div class="ft"><button class="b" onclick="saveM()">حفظ</button><button class="s" onclick="$('#dl').close()">إلغاء</button></div>`)}
+function saveM(){
+ const n=$('#f1').value.trim(),ph=$('#f2').value.trim(),p=pl($('#f3').value);
+ if(!n||!ph||!p)return alert('اكتب الاسم والموبايل واختار الباقة');
+ const m={id:db.seq++,name:n,phone:ph,plan:p.n,start:today(),end:add(today(),p.d),note:$('#f5').value};
+ db.m.push(m);db.p.push({id:Date.now(),mid:m.id,amt:+$('#f4').value||0,d:today(),plan:p.n,by:me.name});save();$('#dl').close();draw();receipt(db.p.at(-1).id)}
+function editM(id){const m=mem(id);dlg(`<h2>تعديل عضو</h2><label>الاسم</label><input id="f1" value="${esc(m.name)}"><label>الموبايل</label><input id="f2" value="${esc(m.phone)}"><label>تاريخ الانتهاء</label><input id="f3" type="date" value="${m.end}"><label>ملاحظات</label><input id="f5" value="${esc(m.note)}"><div class="ft"><button class="b" onclick="upd(${id})">حفظ</button><button class="s" onclick="$('#dl').close()">إلغاء</button></div>`)}
+function upd(id){const m=mem(id);m.name=$('#f1').value;m.phone=$('#f2').value;m.end=$('#f3').value;m.note=$('#f5').value;save();$('#dl').close();draw()}
+function delM(id){if(confirm('حذف العضو وسجلاته؟')){db.m=db.m.filter(m=>m.id!=id);db.p=db.p.filter(p=>p.mid!=id);db.a=db.a.filter(a=>a.mid!=id);save();draw()}}
+function renew(id){const m=mem(id);dlg(`<h2>تجديد: ${esc(m.name)}</h2><label>الباقة</label><select id="f3" onchange="$('#f4').value=pl(this.value).pr">${opts(m.plan)}</select><label>المبلغ المدفوع</label><input id="f4" type="number" value="${pl(m.plan)?.pr||0}"><div class="ft"><button class="b" onclick="doRen(${id})">تأكيد التجديد</button><button class="s" onclick="$('#dl').close()">إلغاء</button></div>`)}
+function doRen(id){const m=mem(id),p=pl($('#f3').value),b=left(m)>0?m.end:today();m.plan=p.n;m.end=add(b,p.d);db.p.push({id:Date.now(),mid:id,amt:+$('#f4').value||0,d:today(),plan:p.n,by:me.name});save();$('#dl').close();draw();receipt(db.p.at(-1).id)}
+function attend(){
+ const l=db.a.filter(x=>x.t.slice(0,10)==today()).reverse();
+ return `<h2>الحضور</h2><div id="msg"></div><div class="bar"><input id="code" placeholder="اكتب كود العضو أو رقم الموبايل ثم Enter" onkeydown="if(event.key=='Enter')checkin()" autofocus><button class="b" onclick="checkin()">تسجيل حضور</button></div><h2 style="font-size:17px">حضور اليوم (${l.length})</h2>${l.length?`<table><tr><th>الوقت</th><th>الاسم</th><th>الحالة</th></tr>${l.map(x=>{const m=mem(x.mid);return m?`<tr><td>${x.t.slice(11,16)}</td><td>${esc(m.name)}</td><td>${tag(m)}</td></tr>`:''}).join('')}</table>`:'<div class="em">لسه محدش سجل حضور النهاردة.</div>'}`}
+function checkin(){const v=$('#code').value.trim(),m=db.m.find(m=>m.id==v||m.phone==v);
+ if(!m){note('مفيش عضو بالكود ده','r');return}
+ if(db.a.some(x=>x.mid==m.id&&x.t.slice(0,10)==today())){note(m.name+' مسجل حضور النهاردة بالفعل','r');return}
+ const ok=left(m)>=0;db.a.push({mid:m.id,t:today()+' '+new Date().toTimeString().slice(0,5)});save();
+ const h=$('#v').innerHTML;draw();note(ok?'✔ تم تسجيل حضور '+m.name:'⚠ '+m.name+': الاشتراك منتهي! اطلب منه التجديد',ok?'g':'r')}
+function payments(){
+ const l=db.p.filter(p=>p.d.slice(0,7)==mo).sort((a,b)=>b.id-a.id),t=l.reduce((s,p)=>s+p.amt,0);
+ return `<h2>المدفوعات</h2><div class="bar"><input type="month" value="${mo}" onchange="mo=this.value;draw()"><div class="st" style="padding:8px 16px">إجمالي الشهر: <b style="display:inline;font-size:20px;color:var(--ac)">${t}</b></div></div>${l.length?`<table><tr><th>التاريخ</th><th>العضو</th><th>الباقة</th><th>المبلغ</th><th>الموظف</th><th></th></tr>${l.map(p=>`<tr><td>${p.d}</td><td>${esc(mem(p.mid)?.name||'محذوف')}</td><td>${esc(p.plan)}</td><td>${p.amt}</td><td>${esc(p.by||'')}</td><td><button class="s" onclick="receipt(${p.id})">إيصال</button></td></tr>`).join('')}</table>`:'<div class="em">مفيش مدفوعات في الشهر ده.</div>'}`}
+function receipt(id){const p=db.p.find(x=>x.id==id),m=p&&mem(p.mid);if(!m)return;const m2=mem(p.mid),w=open('','_blank','width=380,height=520');if(!w)return alert('اسمح بالنوافذ المنبثقة للطباعة');
+ w.document.write(`<html dir="rtl"><body style="font-family:Tahoma;padding:20px;text-align:center"><h2>${esc(db.gym)}</h2><p>إيصال استلام</p><hr><p>الاسم: ${esc(m.name)} (كود ${m.id})</p><p>الباقة: ${esc(p.plan)}</p><p>ساري حتى: ${m.end}</p><p style="font-size:22px"><b>المبلغ: ${p.amt} ج.م</b></p><p>التاريخ: ${p.d}</p><hr><p>شكراً لثقتكم 💪</p><script>print()<\/script></body></html>`);w.document.close()}
+function settings(){
+ return `<h2>الإعدادات</h2><div class="st" style="margin-bottom:16px"><label>اسم الجيم (يظهر في الإيصال)</label><input value="${esc(db.gym)}" onchange="db.gym=this.value;save();draw()"></div>
+ <h2 style="font-size:17px">الباقات</h2><table><tr><th>الاسم</th><th>المدة (يوم)</th><th>السعر</th><th></th></tr>${db.pl.map((p,i)=>`<tr><td>${esc(p.n)}</td><td>${p.d}</td><td>${p.pr}</td><td><button class="s d" onclick="db.pl.splice(${i},1);save();draw()">حذف</button></td></tr>`).join('')}</table>
+ <div class="bar" style="margin-top:10px"><input id="pn" placeholder="اسم الباقة"><input id="pd" type="number" placeholder="المدة بالأيام"><input id="pp" type="number" placeholder="السعر"><button class="b" onclick="addP()">إضافة باقة</button></div>
+ <h2 style="font-size:17px;margin-top:22px">النسخ الاحتياطي</h2><p style="color:var(--mu);margin-bottom:10px">خد نسخة بشكل دوري واحفظها على الفلاشة. بتقدر ترجعها على أي جهاز.</p><div class="bar"><button class="b" onclick="exp()">حفظ نسخة احتياطية</button><button class="s" onclick="$('#imp').click()">استرجاع نسخة</button><input id="imp" type="file" accept=".json" hidden onchange="imp(this.files[0])"></div>`}
+function addP(){const n=$('#pn').value.trim(),d=+$('#pd').value,p=+$('#pp').value;if(!n||!d)return alert('اكتب الاسم والمدة');db.pl.push({n,d,pr:p||0});save();draw()}
+function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));a.download='gym-backup-'+today()+'.json';a.click()}
+function imp(f){if(!f||!confirm('هيتم استبدال كل البيانات الحالية. متأكد؟'))return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.m||!d.pl)throw 0;db=d;save();draw();alert('تم الاسترجاع')}catch(e){alert('الملف غير صالح')}};r.readAsText(f)}
+draw();
+</script></body></html>
