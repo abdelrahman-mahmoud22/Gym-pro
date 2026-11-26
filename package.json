@@ -1,0 +1,4 @@
+{"name":"gym-pro","version":"1.0.0","description":"Gym Management","main":"main.js","author":"Baccalaureate Code",
+"scripts":{"start":"electron .","build":"electron-builder --win --publish never"},
+"devDependencies":{"electron":"^33.2.0","electron-builder":"^25.1.8"},
+"build":{"appId":"com.gym.pro","productName":"Gym Pro","files":["main.js","gym.html"],"win":{"target":"nsis"},"nsis":{"oneClick":false,"allowToChangeInstallationDirectory":true}}}
